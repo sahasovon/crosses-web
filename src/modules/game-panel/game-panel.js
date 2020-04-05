@@ -61,6 +61,10 @@ class GamePanel extends React.Component {
     }
 
     makeATurn(row, col) {
+        if (this.state.game.result !== 'ongoing') {
+            return;
+        }
+
         fetch(process.env.REACT_APP_API_URL + '/game/' + this.state.game._id + '/turn', {
             method: 'post',
             headers: {
