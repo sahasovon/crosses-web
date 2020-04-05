@@ -8,6 +8,7 @@ class GamePanel extends React.Component {
         super(props);
 
         this.makeATurn = this.makeATurn.bind(this);
+        this.restartGame = this.restartGame.bind(this);
 
         this.state = {
             isStarted: false,
@@ -21,6 +22,10 @@ class GamePanel extends React.Component {
     }
 
     componentDidMount() {
+        this.startGame();
+    }
+
+    startGame(restart = false) {
         const whoPlayFirst = Math.random() >= 0.5;
 
         fetch(process.env.REACT_APP_API_URL + '/game', {
@@ -29,6 +34,7 @@ class GamePanel extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                "restart": restart,
                 "players": {
                     "first": whoPlayFirst ? "X" : "O",
                     "second": whoPlayFirst ? "O" : "X"
@@ -39,30 +45,19 @@ class GamePanel extends React.Component {
             .then(response => {
                 this.setState({
                     isStarted: true,
-                    game: response.game
+                    game: response.game,
+                    alert: {
+                        active: (response.type === 'old'),
+                        alertText: 'Starting from old game',
+                    }
                 });
-
-                if (response.type === 'old') {
-                    this.setState({
-                        alert: {
-                            active: true,
-                            alertText: 'Starting from old game',
-                        }
-                    });
-                }
             });
     }
 
-    alertBox() {
-        if (!this.state.alert.active) {
-            return (<></>);
+    restartGame() {
+        if (window.confirm('Are you sure to restart game?')) {
+            this.startGame(true);
         }
-
-        return (<div className="col-12 text-center">
-            <div className={`alert alert-info ${this.state.alert.isBlink ? 'alert-blink' : ''}`}>
-                {this.state.alert.alertText}
-            </div>
-        </div>);
     }
 
     makeATurn(row, col) {
@@ -102,6 +97,18 @@ class GamePanel extends React.Component {
             .catch(err => {
                 console.log('Error', err);
             });
+    }
+
+    alertBox() {
+        if (!this.state.alert.active) {
+            return (<></>);
+        }
+
+        return (<div className="col-12 text-center">
+            <div className={`alert alert-info ${this.state.alert.isBlink ? 'alert-blink' : ''}`}>
+                {this.state.alert.alertText}
+            </div>
+        </div>);
     }
 
     render() {
@@ -172,7 +179,7 @@ class GamePanel extends React.Component {
                             </div>
                             {this.alertBox()}
                             <div className="col-12 pt-4 pb-3">
-                                <button className="btn btn-danger">
+                                <button className="btn btn-danger" onClick={this.restartGame}>
                                     Restart Game
                                 </button>
                             </div>
