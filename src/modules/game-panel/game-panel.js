@@ -130,8 +130,6 @@ class GamePanel extends React.Component {
             );
         }
 
-        console.log(game);
-
         const createBoxes = () => {
             let boxes = [];
 
@@ -149,6 +147,7 @@ class GamePanel extends React.Component {
                             players={game.players}
                             value={game.boxData[r][c]}
                             action={this.makeATurn}
+                            resultBoxes={game.resultBoxes}
                         />);
                 }
 
