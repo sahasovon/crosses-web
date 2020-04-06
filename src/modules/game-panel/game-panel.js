@@ -177,7 +177,7 @@ class GamePanel extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-12 text-center">
+                            <div className="col-12 text-center game-player-current">
                                 <p>Playing: <b>Player { (game.nextTurnBy === 'first') ? '1' : '2' }</b></p>
                             </div>
                             {this.alertBox()}
