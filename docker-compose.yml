@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+
+  crosses-web:
+    container_name: crosses-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '8080:3000'
+    environment:
+      - NODE_ENV=development
